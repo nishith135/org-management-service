@@ -1,0 +1,435 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Organization Management API",
+    "description": "API for managing organizations and admin authentication",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/admin/login": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Admin Login",
+        "description": "Admin login endpoint\n\n- **email**: Admin email address\n- **password**: Admin password\n\nReturns JWT token on successful authentication",
+        "operationId": "admin_login_admin_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/org/create": {
+      "post": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Create Org",
+        "description": "Create a new organization\n\n- **organization_name**: Name of the organization\n- **admin_email**: Admin email address\n- **admin_password**: Admin password\n\nReturns created organization data",
+        "operationId": "create_org_org_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrgCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/org/get": {
+      "get": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Get Org",
+        "description": "Get organization by name (public endpoint, no authentication required)\n\n- **organization_name**: Organization name\n\nReturns organization data",
+        "operationId": "get_org_org_get_get",
+        "parameters": [
+          {
+            "name": "organization_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Organization name",
+              "title": "Organization Name"
+            },
+            "description": "Organization name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/org/update": {
+      "put": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Update Org",
+        "description": "Update an organization\n\n- **current_organization_name**: Current organization name\n- **new_organization_name**: New organization name\n- **admin_email**: Admin email for authentication\n- **admin_password**: Admin password for authentication\n\nReturns updated organization data",
+        "operationId": "update_org_org_update_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrgUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/org/delete": {
+      "delete": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Delete Org",
+        "description": "Deletes organization identified by query param `organization_name`.\nRequires OAuth2 bearer token authentication.",
+        "operationId": "delete_org_org_delete_delete",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Organization name to delete",
+              "title": "Organization Name"
+            },
+            "description": "Organization name to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "APIResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "data": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "trace_id": {
+            "type": "string",
+            "title": "Trace Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "trace_id"
+        ],
+        "title": "APIResponse"
+      },
+      "AdminLoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "AdminLoginRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "OrgCreateRequest": {
+        "properties": {
+          "organization_name": {
+            "type": "string",
+            "title": "Organization Name"
+          },
+          "admin_email": {
+            "type": "string",
+            "format": "email",
+            "title": "Admin Email"
+          },
+          "admin_password": {
+            "type": "string",
+            "title": "Admin Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "organization_name",
+          "admin_email",
+          "admin_password"
+        ],
+        "title": "OrgCreateRequest"
+      },
+      "OrgUpdateRequest": {
+        "properties": {
+          "current_organization_name": {
+            "type": "string",
+            "title": "Current Organization Name"
+          },
+          "new_organization_name": {
+            "type": "string",
+            "title": "New Organization Name"
+          },
+          "admin_email": {
+            "type": "string",
+            "format": "email",
+            "title": "Admin Email"
+          },
+          "admin_password": {
+            "type": "string",
+            "title": "Admin Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_organization_name",
+          "new_organization_name",
+          "admin_email",
+          "admin_password"
+        ],
+        "title": "OrgUpdateRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "/admin/login"
+          }
+        }
+      }
+    }
+  }
+}
